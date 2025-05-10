@@ -2,7 +2,7 @@ import pygame
 import random
 import os
 from attribute import hero_attributes, goblin_attributes, ability_effects, item_effects
-
+import csv
 pygame.init()
 
 WIDTH, HEIGHT = 1280, 720
@@ -53,6 +53,7 @@ class Character:
         self.items = attr["items"]
         self.sfx_path = attr.get("sfx", "")
         self.sprite_folder = attr.get("sprite", None)
+        self.moveset = []
 
         self.animations = {}
         if self.sprite_folder:
@@ -145,25 +146,30 @@ class Character:
             damage //= 2
         p = target.take_damage(damage)
         if p == 1:
+
             target.play_sound("parry")
             target.start_animation("parry")
             target.total_m_dam += damage
+            target.moveset.append("parry")
             return "Parried"
         else:
             self.total_damage_dealt += damage
             self.play_sound("attack")
             self.start_animation("attack")
+            self.moveset.append("attack")
             return f"{self.name} attacks for {damage} damage!"
 
     def defend(self):
         self.defend_stance = 1
         self.play_sound("defend")
+        self.moveset.append("defend")
         return f"{self.name} defends!"
 
     def use_ability(self, ability, target):
         if ability in ability_effects:
             result = ability_effects[ability](self, target)
             self.play_sound(ability)
+            self.moveset.append(ability)
             if ability == "Fireball":
                 self.start_animation("attack")
                 target.status_effect_animation = "fireball"
@@ -180,6 +186,7 @@ class Character:
         if item in item_effects:
             result = item_effects[item](self, target)
             self.play_sound(item)
+            self.moveset.append("item")
             return result
         return "Invalid item!"
 
@@ -268,10 +275,12 @@ class Battle:
             self.action_message = "You lose!"
             self.game_over = True
             self.battle_report = self.generate_combat_report()
+            self.save_combat_report_to_csv()
         elif self.character2.health <= 0:
             self.action_message = "You win!"
             self.game_over = True
             self.battle_report = self.generate_combat_report()
+            self.save_combat_report_to_csv()
 
     def generate_combat_report(self):
         report = f"{self.character1.name} dealt {self.character1.total_damage_dealt} damage.\n"
@@ -281,6 +290,27 @@ class Battle:
         report += f"{self.character2.name} healed {self.character2.total_healing_done} HP.\n"
         return report
 
+    def save_combat_report_to_csv(self, filename="combat_log.csv"):
+        file_exists = os.path.isfile(filename)
+        with open(filename, mode="a", newline="") as file:
+            writer = csv.writer(file)
+            if not file_exists:
+                writer.writerow(["Name", "Damage Dealt", "Healing Done", "Damage Mitigated", "Movesets"])
+            writer.writerow([
+                self.character1.name,
+                self.character1.total_damage_dealt,
+                self.character1.total_healing_done,
+                self.character1.total_m_dam,
+                self.character1.moveset
+            ])
+            writer.writerow([
+                self.character2.name,
+                self.character2.total_damage_dealt,
+                self.character2.total_healing_done,
+                self.character2.total_m_dam,
+                self.character2.moveset
+            ])
+            writer.writerow([])
 hero = Character(hero_attributes)
 enemy = Character(goblin_attributes)
 battle = Battle(hero, enemy)
