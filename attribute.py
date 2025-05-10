@@ -1,5 +1,3 @@
-
-
 hero_attributes = {
     "name": "Hero",
     "health": 100,
@@ -7,7 +5,9 @@ hero_attributes = {
     "strength": 15,
     "defense": 5,
     "abilities": ["Fireball", "Heal", "Bash", "Shield"],
-    "items": ["Potion", "Elixir"]
+    "items": ["Potion", "Elixir"],
+    "sfx": "sfx/hero",
+    "sprite": "sprites/hero"
 }
 
 goblin_attributes = {
@@ -17,20 +17,32 @@ goblin_attributes = {
     "strength": 10,
     "defense": 5,
     "abilities": ["Swipe", "Kick"],
-    "items": ["Potion"]
+    "items": ["Potion"],
+    "sfx": "sfx/hero",
+    "sprite": "sprites/goblin"
 }
 def fireball(char1, char2):
-    """Deal 25+str Damages"""
+    """Deal 25+str magic damage, costs 10 mana"""
     dmg_for = 25 + char1.strength
     if char1.mana >= 10:
         if char2.defend_stance == 1:
-            damage = dmg_for//2
+            damage = dmg_for // 2
         else:
             damage = dmg_for
-        char2.health -= damage
+
+        # Apply damage and check for parry
+        p = char2.take_damage(damage)
         char1.mana -= 10
-        char1.total_damage_dealt += damage
-        return f"{char1.name} casts Fireball for {damage} damage!"
+
+        if p == 1:
+            char2.play_sound("parry")
+            char2.start_animation("parry")
+            char2.total_m_dam += damage
+            return "Parried"
+        else:
+            char1.total_damage_dealt += damage
+            char1.play_sound("fireball")
+            return f"{char1.name} casts Fireball for {damage} damage!"
     return "Not enough mana for Fireball!"
 
 def heal(char1, char2):
@@ -116,3 +128,13 @@ item_effects = {
     "Elixir": elixir
 }
 
+sound_effects = {
+    "attack": "hero_attack.wav",
+    "defend": "hero_defend.wav",
+    "Fireball": "fireball.wav",
+    "Heal": "heal.wav",
+    "Bash": "bash.wav",
+    "Shield": "shield.wav",
+    "Potion": "potion.wav",
+    "Elixir": "elixir.wav"
+}
