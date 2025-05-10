@@ -1,8 +1,10 @@
 import pygame
 import random
 import os
-from attribute import hero_attributes, goblin_attributes, ability_effects, item_effects
+import attribute as atr
 import csv
+import sys
+
 pygame.init()
 
 WIDTH, HEIGHT = 1280, 720
@@ -109,27 +111,25 @@ class Character:
             self.is_animating = True
 
     def animate(self):
-            # Main animation logic
             if self.is_animating:
                 self.animation_timer += 1
                 if self.animation_timer >= 5:
                     self.current_frame += 1
                     self.animation_timer = 0
 
-                    # Parry logic for Goblin
-                    if self.name == "Goblin" and self.current_animation == "attack":
+                    if (self.name == "Goblin" or self.name == "Skeleton") and self.current_animation == "attack":
                         if self.current_frame == 2:
                             battle.parry_window = True
                             battle.parry_timer = pygame.time.get_ticks()
                         elif self.current_frame == 4:
                             battle.parry_window = False
 
+
                 if self.current_frame >= len(self.animations[self.current_animation]):
                     self.current_frame = 0
                     self.is_animating = False
                     self.current_animation = "idle"
 
-            # Status effect animation logic (e.g. fireball burning on character)
             if self.status_effect_animation:
                 self.status_effect_timer += 1
                 if self.status_effect_timer >= 5:
@@ -166,8 +166,8 @@ class Character:
         return f"{self.name} defends!"
 
     def use_ability(self, ability, target):
-        if ability in ability_effects:
-            result = ability_effects[ability](self, target)
+        if ability in atr.ability_effects:
+            result = atr.ability_effects[ability](self, target)
             self.play_sound(ability)
             self.moveset.append(ability)
             if ability == "Fireball":
@@ -183,8 +183,8 @@ class Character:
         return "Invalid ability!"
 
     def use_item(self, item, target):
-        if item in item_effects:
-            result = item_effects[item](self, target)
+        if item in atr.item_effects:
+            result = atr.item_effects[item](self, target)
             self.play_sound(item)
             self.moveset.append("item")
             return result
@@ -204,7 +204,7 @@ class Character:
             self.health -= amount
 
     def take_turn(self, opponent):
-        move_type = random.choice(["attack"])
+        move_type = random.choice(["attack", "defend", "ability", "item"])
         if move_type == "attack":
             return self.attack(opponent)
         elif move_type == "defend":
@@ -311,108 +311,117 @@ class Battle:
                 self.character2.moveset
             ])
             writer.writerow([])
-hero = Character(hero_attributes)
-enemy = Character(goblin_attributes)
-battle = Battle(hero, enemy)
 
-def draw_button(text, x, y, w, h, color=BLUE):
-    rect = pygame.draw.rect(screen, color, (x, y, w, h))
-    label = font.render(text, True, WHITE)
-    screen.blit(label, (x + w//2 - label.get_width()//2, y + h//2 - label.get_height()//2))
-    return rect
+class GameInstance:
+    def __init__(self, hero_atr, enemy_atr):
+        pygame.init()
+        self.WIDTH, self.HEIGHT = 1280, 720
+        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
+        pygame.display.set_caption("Starry Night - Turn-Based Combat")
 
-def draw_battle_screen():
-    screen.fill(WHITE)
+        self.font = pygame.font.Font(None, 36)
+        self.small_font = pygame.font.Font(None, 24)
+        self.large_font = pygame.font.Font(None, 72)
 
-    # Bars
-    pygame.draw.rect(screen, RED, (50, 60, 200, 30))
-    pygame.draw.rect(screen, GREEN, (50, 60, 200 * (battle.character1.health / battle.character1.max_health), 30))
-    pygame.draw.rect(screen, RED, (50, 95, 200, 20))
-    pygame.draw.rect(screen, BLUE, (50, 95, 200 * (battle.character1.mana / battle.character1.max_mana), 20))
-    pygame.draw.rect(screen, RED, (WIDTH - 250, 60, 200, 30))
-    pygame.draw.rect(screen, GREEN, (WIDTH - 250, 60, 200 * (battle.character2.health / battle.character2.max_health), 30))
+        self.colors = {
+            "white": (255, 255, 255),
+            "black": (0, 0, 0),
+            "red": (255, 0, 0),
+            "green": (0, 255, 0),
+            "blue": (0, 0, 255)
+        }
+        global battle
+        self.hero = Character(hero_atr)
+        self.enemy = Character(enemy_atr)
+        self.battle = Battle(self.hero, self.enemy)
+        battle = self.battle
+        self.clock = pygame.time.Clock()
+        self.buttons = {}
 
-    screen.blit(font.render(f"{battle.character1.name} HP: {battle.character1.health}", True, BLACK), (50, 30))
-    screen.blit(font.render(f"{battle.character2.name} HP: {battle.character2.health}", True, BLACK), (WIDTH - 250, 30))
-    screen.blit(font.render(battle.action_message, True, BLACK), (WIDTH // 2 - 200, HEIGHT - 600))
+    def draw_button(self, text, x, y, w, h, color=None):
+        color = color or self.colors["blue"]
+        rect = pygame.draw.rect(self.screen, color, (x, y, w, h))
+        label = self.font.render(text, True, self.colors["white"])
+        self.screen.blit(label, (x + w // 2 - label.get_width() // 2, y + h // 2 - label.get_height() // 2))
+        return rect
 
-    # Animate and draw characters
-    battle.character1.animate()
-    battle.character2.animate()
+    def draw_battle_screen(self):
+        self.screen.fill(self.colors["white"])
+        battle = self.battle
 
-    for i, character in enumerate([battle.character1, battle.character2]):
-        frame = character.animations[character.current_animation][character.current_frame]
-        pos_x = 100 if i == 0 else WIDTH - 300
-        screen.blit(pygame.transform.scale(frame, (200, 200)), (pos_x, HEIGHT // 2 - 100))
-        if character.status_effect_animation:
-            effect_frame = character.animations[character.status_effect_animation][character.status_effect_frame]
-            effect_pos = (pos_x + 50, HEIGHT // 2 - 130)
-            screen.blit(pygame.transform.scale(effect_frame, (100, 100)), effect_pos)
+        pygame.draw.rect(self.screen, self.colors["red"], (50, 60, 200, 30))
+        pygame.draw.rect(self.screen, self.colors["green"], (50, 60, 200 * (battle.character1.health / battle.character1.max_health), 30))
+        pygame.draw.rect(self.screen, self.colors["red"], (50, 95, 200, 20))
+        pygame.draw.rect(self.screen, self.colors["blue"], (50, 95, 200 * (battle.character1.mana / battle.character1.max_mana), 20))
+        pygame.draw.rect(self.screen, self.colors["red"], (self.WIDTH - 250, 60, 200, 30))
+        pygame.draw.rect(self.screen, self.colors["green"], (self.WIDTH - 250, 60, 200 * (battle.character2.health / battle.character2.max_health), 30))
 
-    buttons = {}
+        self.screen.blit(self.font.render(f"{battle.character1.name} HP: {battle.character1.health}", True, self.colors["black"]), (50, 30))
+        self.screen.blit(self.font.render(f"{battle.character2.name} HP: {battle.character2.health}", True, self.colors["black"]), (self.WIDTH - 250, 30))
+        self.screen.blit(self.font.render(battle.action_message, True, self.colors["black"]), (self.WIDTH // 2 - 200, self.HEIGHT - 600))
 
-    if not battle.game_over and battle.is_character1_turn:
-        button_width = 180
-        button_height = 60
-        start_x = (WIDTH - (4 * button_width + 3 * 20)) / 2
-        y_position = HEIGHT - 100
-        buttons["attack"] = draw_button("Attack", start_x, y_position, button_width, button_height)
-        buttons["defend"] = draw_button("Defend", start_x + button_width + 20, y_position, button_width, button_height)
-        buttons["ability"] = draw_button("Ability", start_x + 2 * (button_width + 20), y_position, button_width, button_height)
-        buttons["item"] = draw_button("Item", start_x + 3 * (button_width + 20), y_position, button_width, button_height)
+        battle.character1.animate()
+        battle.character2.animate()
+        for i, character in enumerate([battle.character1, battle.character2]):
+            frame = character.animations[character.current_animation][character.current_frame]
+            pos_x = 100 if i == 0 else self.WIDTH - 300
+            self.screen.blit(pygame.transform.scale(frame, (200, 200)), (pos_x, self.HEIGHT // 2 - 100))
+            if character.status_effect_animation:
+                effect_frame = character.animations[character.status_effect_animation][character.status_effect_frame]
+                effect_pos = (pos_x + 50, self.HEIGHT // 2 - 130)
+                self.screen.blit(pygame.transform.scale(effect_frame, (100, 100)), effect_pos)
 
-    if battle.show_abilities:
-        for i, ab in enumerate(battle.character1.abilities):
-            ab_btn = draw_button(ab, 250 + i * 200, HEIGHT - 200, 180, 60)
-            cost = ability_effects[ab].__doc__ if ability_effects.get(ab).__doc__ else ""
-            cost_txt = small_font.render(cost, True, BLACK)
-            screen.blit(cost_txt, (ab_btn.x + ab_btn.width//2 - cost_txt.get_width()//2, ab_btn.y + 65))
-            buttons[f"ability_{i}"] = ab_btn
+        self.buttons.clear()
+        if not battle.game_over and battle.is_character1_turn:
+            bw, bh = 180, 60
+            start_x = (self.WIDTH - (4 * bw + 3 * 20)) / 2
+            y_pos = self.HEIGHT - 100
+            self.buttons["attack"] = self.draw_button("Attack", start_x, y_pos, bw, bh)
+            self.buttons["defend"] = self.draw_button("Defend", start_x + bw + 20, y_pos, bw, bh)
+            self.buttons["ability"] = self.draw_button("Ability", start_x + 2 * (bw + 20), y_pos, bw, bh)
+            self.buttons["item"] = self.draw_button("Item", start_x + 3 * (bw + 20), y_pos, bw, bh)
 
-    if battle.show_items:
-        for i, item in enumerate(battle.character1.items):
-            item_btn = draw_button(item, 250 + i * 200, HEIGHT - 200, 180, 60)
-            effect = item_effects[item].__doc__ if item_effects.get(item).__doc__ else ""
-            effect_txt = small_font.render(effect, True, BLACK)
-            screen.blit(effect_txt, (item_btn.x + item_btn.width//2 - effect_txt.get_width()//2, item_btn.y + 65))
-            buttons[f"item_{i}"] = item_btn
+        if battle.show_abilities:
+            for i, ab in enumerate(battle.character1.abilities):
+                ab_btn = self.draw_button(ab, 250 + i * 200, self.HEIGHT - 200, 180, 60)
+                cost = atr.ability_effects[ab].__doc__ or ""
+                cost_txt = self.small_font.render(cost, True, self.colors["black"])
+                self.screen.blit(cost_txt, (ab_btn.x + ab_btn.width // 2 - cost_txt.get_width() // 2, ab_btn.y + 65))
+                self.buttons[f"ability_{i}"] = ab_btn
 
-    if battle.game_over:
-        screen.fill(WHITE)
-        victory_text = "Victory!" if battle.character1.health > 0 else "Defeat!"
-        text_rect = large_font.render(victory_text, True, GREEN if battle.character1.health > 0 else RED).get_rect(center=(WIDTH // 2, HEIGHT // 4))
-        screen.blit(large_font.render(victory_text, True, GREEN if battle.character1.health > 0 else RED), text_rect)
-        report_text = font.render("Combat Report:", True, BLACK)
-        screen.blit(report_text, (50, HEIGHT // 2 - 50))
+        if battle.show_items:
+            for i, item in enumerate(battle.character1.items):
+                item_btn = self.draw_button(item, 250 + i * 200, self.HEIGHT - 200, 180, 60)
+                effect = atr.item_effects[item].__doc__ or ""
+                effect_txt = self.small_font.render(effect, True, self.colors["black"])
+                self.screen.blit(effect_txt, (item_btn.x + item_btn.width // 2 - effect_txt.get_width() // 2, item_btn.y + 65))
+                self.buttons[f"item_{i}"] = item_btn
 
-        lines = battle.battle_report.split("\n")
-        for i, line in enumerate(lines):
-            screen.blit(small_font.render(line, True, BLACK), (50, HEIGHT // 2 + 10 + i * 30))
+        if battle.game_over:
+            screen.fill(WHITE)
+            victory_text = "Victory!" if battle.character1.health > 0 else "Defeat!"
+            text_rect = large_font.render(victory_text, True, GREEN if battle.character1.health > 0 else RED).get_rect(
+                center=(WIDTH // 2, HEIGHT // 4))
+            screen.blit(large_font.render(victory_text, True, GREEN if battle.character1.health > 0 else RED),
+                        text_rect)
+            report_text = font.render("Combat Report:", True, BLACK)
+            screen.blit(report_text, (50, HEIGHT // 2 - 50))
 
-        buttons["restart"] = draw_button("Restart", WIDTH // 2 - 200, HEIGHT - 150, 180, 60)
-        buttons["quit"] = draw_button("Quit", WIDTH // 2 + 20, HEIGHT - 150, 180, 60)
+            lines = battle.battle_report.split("\n")
+            for i, line in enumerate(lines):
+                screen.blit(small_font.render(line, True, BLACK), (50, HEIGHT // 2 + 10 + i * 30))
 
-    pygame.display.flip()
-    return buttons
+            self.buttons["stage"] = self.draw_button("Back", WIDTH // 2 - 200, HEIGHT - 150, 180, 60)
+            self.buttons["quit"] = self.draw_button("Quit", WIDTH // 2 + 20, HEIGHT - 150, 180, 60)
 
-running = True
-clock = pygame.time.Clock()
-
-while running:
-    clock.tick(60)
-    battle.update()
-    buttons = draw_battle_screen()
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+    def handle_input(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
             mx, my = pygame.mouse.get_pos()
-            if event.button == 3:  # Right-click for parry
-                if battle.parry_window:
-                    battle.parry_success = True
-                    print("Parry activated!")  # You can play a sound or animation here
-            for key, btn in buttons.items():
+            if event.button == 3:
+                if self.battle.parry_window:
+                    self.battle.parry_success = True
+                    print("Parry activated!")
+            for key, btn in self.buttons.items():
                 if btn.collidepoint(mx, my):
                     if key == "attack":
                         battle.process_action("attack")
@@ -428,9 +437,39 @@ while running:
                     elif key.startswith("item_"):
                         idx = int(key.split("_")[1])
                         battle.process_action("item", item_choice=battle.character1.items[idx])
-                    elif key == "restart":
-                        hero = Character(hero_attributes)
-                        enemy = Character(goblin_attributes)
-                        battle = Battle(hero, enemy)
                     elif key == "quit":
-                        running = False
+                        self.running = False
+                    elif key == "stage":
+                        self.running = False
+                        pygame.quit()
+
+
+    def run(self):
+        self.running = True
+        while self.running:
+            self.clock.tick(60)
+            self.battle.update()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                self.handle_input(event)
+            self.draw_battle_screen()
+            pygame.display.flip()
+
+        pygame.quit()
+
+if __name__ == "__main__":
+    level = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+
+    if level == 1:
+        enemy_attributes = atr.goblin_attributes
+    elif level == 2:
+        enemy_attributes = atr.skeleton_attributes
+    else:
+        print(f"Warning: Level {level} not defined, defaulting to Goblin.")
+        enemy_attributes = atr.goblin_attributes
+
+    game = GameInstance(atr.hero_attributes, enemy_attributes)
+    game.run()
+    print(level)
+

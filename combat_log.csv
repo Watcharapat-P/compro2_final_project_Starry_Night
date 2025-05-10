@@ -2,18 +2,105 @@ Name,Damage Dealt,Healing Done,Damage Mitigated,Movesets
 Hero,80,0,0,"['Fireball', 'Fireball']"
 Goblin,9,0,0,['attack']
 
-Hero,68,0,0,"['Fireball', 'attack', 'attack']"
-Goblin,18,0,0,"['attack', 'attack']"
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
 
-Hero,70,0,18,"['attack', 'attack', 'attack', 'attack', 'attack']"
-Goblin,18,0,0,"['attack', 'parry', 'attack', 'parry']"
-
-Hero,70,0,13,"['attack', 'attack', 'parry', 'attack', 'defend', 'parry', 'attack', 'attack']"
-Goblin,22,0,0,"['attack', 'attack', 'attack']"
+Hero,68,0,9,"['Fireball', 'attack', 'parry', 'attack']"
+Goblin,9,0,0,['attack']
 
 Hero,80,0,0,"['Fireball', 'Fireball']"
 Goblin,9,0,0,['attack']
 
-Hero,60,9,0,"['Heal', 'item', 'Bash', 'Bash']"
-Goblin,27,0,0,"['attack', 'attack', 'attack']"
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,60,0,0,"['Bash', 'Bash']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,94,0,0,"['attack', 'Fireball', 'Fireball']"
+Goblin,18,0,0,"['attack', 'attack']"
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,9,0,0,['attack']
+
+Hero,147,0,0,"['Fireball', 'defend', 'defend', 'attack', 'Fireball', 'Fireball', 'Fireball', 'Fireball']"
+Goblin,15,40,0,"['defend', 'Kick', 'item', 'defend', 'defend', 'defend', 'item']"
+
+Hero,95,0,0,"['Fireball', 'Fireball', 'defend', 'attack', 'attack', 'attack']"
+Goblin,34,20,0,"['defend', 'Kick', 'item', 'defend', 'attack']"
+
+Hero,80,0,0,"['Fireball', 'Shield', 'Fireball']"
+Goblin,50,0,0,"['Swipe', 'Swipe']"
+
+Hero,89,0,0,"['Fireball', 'attack', 'attack', 'attack', 'attack']"
+Goblin,50,20,0,"['Swipe', 'defend', 'item', 'Swipe']"
+
+Hero,80,9,0,"['Fireball', 'item', 'Fireball']"
+Goblin,18,0,0,"['attack', 'attack']"
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,0,20,0,['item']
+
+Hero,80,0,0,"['Fireball', 'Fireball']"
+Goblin,0,20,0,['item']
+
+Hero,98,0,9,"['attack', 'attack', 'attack', 'attack', 'parry', 'attack', 'attack', 'attack', 'attack']"
+Skeleton,64,20,0,"['attack', 'defend', 'item', 'Swipe', 'defend', 'Kick']"
+
+Hero,87,40,0,"['defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'item', 'item', 'attack', 'Fireball', 'Fireball']"
+Goblin,133,0,0,"['Kick', 'attack', 'defend', 'defend', 'Swipe', 'attack', 'attack', 'attack', 'item', 'item', 'Fireball', 'item', 'attack', 'attack', 'Fireball', 'Swipe']"
 

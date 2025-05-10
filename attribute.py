@@ -16,10 +16,21 @@ goblin_attributes = {
     "mana": 50,
     "strength": 10,
     "defense": 5,
-    "abilities": ["Swipe", "Kick"],
+    "abilities": ["Swipe", "Kick", "Fireball"],
     "items": ["Potion"],
     "sfx": "sfx/hero",
     "sprite": "sprites/goblin"
+}
+skeleton_attributes = {
+    "name": "Skeleton",
+    "health": 60,
+    "mana": 50,
+    "strength": 10,
+    "defense": 5,
+    "abilities": ["Swipe", "Kick"],
+    "items": ["Potion"],
+    "sfx": "sfx/hero",
+    "sprite": "sprites/skeleton"
 }
 def fireball(char1, char2):
     """Deal 25+str magic damage, costs 10 mana"""
@@ -128,13 +139,4 @@ item_effects = {
     "Elixir": elixir
 }
 
-sound_effects = {
-    "attack": "hero_attack.wav",
-    "defend": "hero_defend.wav",
-    "Fireball": "fireball.wav",
-    "Heal": "heal.wav",
-    "Bash": "bash.wav",
-    "Shield": "shield.wav",
-    "Potion": "potion.wav",
-    "Elixir": "elixir.wav"
-}
+
