@@ -1,106 +1,82 @@
 Name,Damage Dealt,Healing Done,Damage Mitigated,Movesets
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,129,0,0,"['Fireball', 'attack', 'attack', 'attack', 'attack', 'attack', 'Fireball']"
+Visor,35,40,0,"['item', 'Fireball', 'defend', 'defend', 'defend', 'item']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,80,0,0,"['Fireball', 'Fireball']"
+Visor,9,0,0,['attack']
 
-Hero,68,0,9,"['Fireball', 'attack', 'parry', 'attack']"
-Goblin,9,0,0,['attack']
+Meepo,80,0,0,"['Fireball', 'Fireball']"
+Dunky,0,20,0,['item']
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,80,0,0,"['Fireball', 'Fireball']"
+Visor,0,20,0,['item']
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,148,0,51,"['Fireball', 'attack', 'defend', 'parry', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'parry', 'attack', 'Fireball', 'Fireball', 'Fireball', 'Fireball', 'parry', 'Fireball', 'Fireball', 'Fireball', 'attack', 'defend', 'defend', 'item', 'parry', 'Fireball', 'Fireball']"
+Visor,104,80,80,"['Swipe', 'Fireball', 'attack', 'defend', 'defend', 'item', 'defend', 'defend', 'Swipe', 'defend', 'item', 'attack', 'attack', 'Fireball', 'defend', 'item', 'defend', 'item', 'Kick']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,80,0,0,"['Fireball', 'Fireball']"
+Visor,0,20,0,['item']
 
-Hero,60,0,0,"['Bash', 'Bash']"
-Goblin,9,0,0,['attack']
+Meepo,82,0,29,"['Fireball', 'attack', 'attack', 'parry', 'attack']"
+Visor,25,20,14,"['Swipe', 'parry', 'item', 'Smoke']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,80,0,0,"['Fireball', 'Fireball']"
+Visor,9,0,0,['attack']
 
-Hero,94,0,0,"['attack', 'Fireball', 'Fireball']"
-Goblin,18,0,0,"['attack', 'attack']"
+Meepo,80,0,9,"['Fireball', 'parry', 'Fireball']"
+Visor,0,0,0,[]
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,80,0,0,"['Fireball', 'Fireball']"
+Visor,25,0,0,['Swipe']
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,140,0,0,"['attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'attack']"
+Visor,81,51,42,"['defend', 'Smoke', 'parry', 'item', 'item', 'attack', 'attack', 'parry', 'defend', 'item', 'defend', 'defend', 'defend', 'defend', 'attack', 'parry', 'Swipe', 'attack']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,87,0,4,"['defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'parry', 'attack', 'Fireball', 'Fireball']"
+Visor,23,0,0,"['defend', 'defend', 'item', 'Smoke', 'item', 'attack', 'attack']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,89,0,0,"['Fireball', 'attack', 'attack', 'attack', 'attack']"
+Visor,88,20,28,"['defend', 'Fireball', 'parry', 'item', 'attack', 'parry', 'attack', 'Fireball']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,145,0,0,"['attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'attack', 'Fireball']"
+Visor,44,48,0,"['item', 'item', 'defend', 'defend', 'attack', 'defend', 'Fireball', 'defend', 'defend', 'item']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,80,0,0,"['Fireball', 'Fireball']"
+Visor,0,20,0,['item']
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,100,0,0,"['Fireball', 'Fireball', 'Fireball']"
+Visor,0,20,0,"['defend', 'item']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,80,0,0,"['Fireball', 'Fireball']"
+Visor,35,0,0,['Fireball']
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,122,0,0,"['attack', 'defend', 'attack', 'Fireball', 'attack', 'Fireball']"
+Visor,35,40,0,"['attack', 'Fireball', 'item', 'item', 'attack']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,100,0,0,"['item', 'Fireball', 'Fireball', 'Fireball']"
+Visor,0,30,0,"['defend', 'item', 'item']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,80,0,0,"['Fireball', 'Fireball']"
+Visor,0,20,0,['item']
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,100,0,0,"['Fireball', 'Fireball', 'Fireball']"
+Visor,0,20,0,"['defend', 'item']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,82,0,10,"['attack', 'defend', 'attack', 'Fireball', 'attack']"
+Visor,22,14,14,"['attack', 'Smoke', 'parry', 'item', 'attack', 'attack']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,68,0,0,"['attack', 'Fireball', 'attack']"
+Visor,95,0,28,"['Fireball', 'parry', 'Smoke', 'Smoke', 'parry', 'Smoke']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,88,0,0,"['attack', 'attack', 'attack', 'Fireball', 'Fireball', 'Fireball']"
+Visor,40,0,40,"['defend', 'defend', 'Smoke', 'defend', 'Smoke']"
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,80,0,0,"['Fireball', 'Fireball']"
+Visor,35,0,0,['Fireball']
 
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,9,0,0,['attack']
+Meepo,68,0,0,"['Fireball', 'attack', 'attack', 'attack']"
+Dunky,25,0,0,"['Swipe', 'defend', 'defend']"
 
-Hero,147,0,0,"['Fireball', 'defend', 'defend', 'attack', 'Fireball', 'Fireball', 'Fireball', 'Fireball']"
-Goblin,15,40,0,"['defend', 'Kick', 'item', 'defend', 'defend', 'defend', 'item']"
-
-Hero,95,0,0,"['Fireball', 'Fireball', 'defend', 'attack', 'attack', 'attack']"
-Goblin,34,20,0,"['defend', 'Kick', 'item', 'defend', 'attack']"
-
-Hero,80,0,0,"['Fireball', 'Shield', 'Fireball']"
-Goblin,50,0,0,"['Swipe', 'Swipe']"
-
-Hero,89,0,0,"['Fireball', 'attack', 'attack', 'attack', 'attack']"
-Goblin,50,20,0,"['Swipe', 'defend', 'item', 'Swipe']"
-
-Hero,80,9,0,"['Fireball', 'item', 'Fireball']"
-Goblin,18,0,0,"['attack', 'attack']"
-
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,0,20,0,['item']
-
-Hero,80,0,0,"['Fireball', 'Fireball']"
-Goblin,0,20,0,['item']
-
-Hero,98,0,9,"['attack', 'attack', 'attack', 'attack', 'parry', 'attack', 'attack', 'attack', 'attack']"
-Skeleton,64,20,0,"['attack', 'defend', 'item', 'Swipe', 'defend', 'Kick']"
-
-Hero,87,40,0,"['defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'defend', 'item', 'item', 'attack', 'Fireball', 'Fireball']"
-Goblin,133,0,0,"['Kick', 'attack', 'defend', 'defend', 'Swipe', 'attack', 'attack', 'attack', 'item', 'item', 'Fireball', 'item', 'attack', 'attack', 'Fireball', 'Swipe']"
+Meepo,90,0,30,"['Bash', 'Shield', 'Shield', 'Shield', 'Fireball', 'Fireball']"
+Dunky,25,20,0,"['defend', 'Swipe', 'defend', 'Kick', 'item']"
 

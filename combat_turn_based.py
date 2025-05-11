@@ -10,6 +10,7 @@ pygame.init()
 WIDTH, HEIGHT = 1280, 720
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Starry Night - Turn-Based Combat")
+background_image = pygame.image.load("battle_bg.png").convert()
 
 font = pygame.font.Font(None, 36)
 small_font = pygame.font.Font(None, 24)
@@ -64,17 +65,22 @@ class Character:
             parry_path = f"{self.sprite_folder}/parry.png"
             fireball_path = f"{self.sprite_folder}/fireball.png"
             heal_path = f"{self.sprite_folder}/heal.png"
+            smoke_path = f"{self.sprite_folder}/smoke.png"
 
             if os.path.exists(idle_path):
                 self.animations["idle"] = load_sprite_frames(idle_path, 32, 32, 1, 1)
             if os.path.exists(attack_path):
                 self.animations["attack"] = load_sprite_frames(attack_path, 32, 32, 4, 1)
+                self.animations["kick"] = load_sprite_frames(attack_path, 32, 32, 4, 1)
+                self.animations["swipe"] = load_sprite_frames(attack_path, 32, 32, 4, 1)
             if os.path.exists(parry_path):
                 self.animations["parry"] = load_sprite_frames(parry_path, 32, 32, 4, 1)
             if os.path.exists(fireball_path):
                 self.animations["fireball"] = load_sprite_frames(fireball_path, 64, 64, 4, 5)
             if os.path.exists(heal_path):
                 self.animations["heal"] = load_sprite_frames(heal_path, 64, 64, 5, 2)
+            if os.path.exists(smoke_path):
+                self.animations["smoke"] = load_sprite_frames(smoke_path, 64, 64, 4, 5)
 
         self.current_animation = "idle"
         self.current_frame = 0
@@ -117,13 +123,18 @@ class Character:
                     self.current_frame += 1
                     self.animation_timer = 0
 
-                    if (self.name == "Goblin" or self.name == "Skeleton") and self.current_animation == "attack":
+                    if self.current_animation == "attack":
                         if self.current_frame == 2:
                             battle.parry_window = True
                             battle.parry_timer = pygame.time.get_ticks()
                         elif self.current_frame == 4:
                             battle.parry_window = False
-
+                    if self.current_animation == "smoke" or self.current_animation == "fireball":
+                        if self.current_frame == 2:
+                            battle.parry_window = True
+                            battle.parry_timer = pygame.time.get_ticks()
+                        elif self.current_frame == 10:
+                            battle.parry_window = False
 
                 if self.current_frame >= len(self.animations[self.current_animation]):
                     self.current_frame = 0
@@ -146,7 +157,6 @@ class Character:
             damage //= 2
         p = target.take_damage(damage)
         if p == 1:
-
             target.play_sound("parry")
             target.start_animation("parry")
             target.total_m_dam += damage
@@ -179,6 +189,11 @@ class Character:
                 self.status_effect_animation = "heal"
                 self.status_effect_frame = 0
                 self.status_effect_timer = 0
+            if ability == "Smoke":
+                self.start_animation("attack")
+                target.status_effect_animation = "smoke"
+                target.status_effect_frame = 0
+                target.status_effect_timer = 0
             return result
         return "Invalid ability!"
 
@@ -191,7 +206,7 @@ class Character:
         return "Invalid item!"
 
     def take_damage(self, amount):
-        if self.name == "Hero" and battle.parry_success:
+        if battle.parry_success:
             battle.parry_success = False
             battle.parry_window = False
             battle.action_message = "Parry! No damage taken!"
@@ -315,6 +330,8 @@ class Battle:
 class GameInstance:
     def __init__(self, hero_atr, enemy_atr):
         pygame.init()
+        self.background = pygame.image.load("battle_bg.png").convert()
+        self.sounds = self.load_sounds()
         self.WIDTH, self.HEIGHT = 1280, 720
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         pygame.display.set_caption("Starry Night - Turn-Based Combat")
@@ -337,6 +354,8 @@ class GameInstance:
         battle = self.battle
         self.clock = pygame.time.Clock()
         self.buttons = {}
+        pygame.mixer.music.load("sfx/battle_bgm.wav")
+        pygame.mixer.music.play(-1)
 
     def draw_button(self, text, x, y, w, h, color=None):
         color = color or self.colors["blue"]
@@ -346,7 +365,7 @@ class GameInstance:
         return rect
 
     def draw_battle_screen(self):
-        self.screen.fill(self.colors["white"])
+        self.screen.blit(self.background, (0, 0))
         battle = self.battle
 
         pygame.draw.rect(self.screen, self.colors["red"], (50, 60, 200, 30))
@@ -356,9 +375,9 @@ class GameInstance:
         pygame.draw.rect(self.screen, self.colors["red"], (self.WIDTH - 250, 60, 200, 30))
         pygame.draw.rect(self.screen, self.colors["green"], (self.WIDTH - 250, 60, 200 * (battle.character2.health / battle.character2.max_health), 30))
 
-        self.screen.blit(self.font.render(f"{battle.character1.name} HP: {battle.character1.health}", True, self.colors["black"]), (50, 30))
-        self.screen.blit(self.font.render(f"{battle.character2.name} HP: {battle.character2.health}", True, self.colors["black"]), (self.WIDTH - 250, 30))
-        self.screen.blit(self.font.render(battle.action_message, True, self.colors["black"]), (self.WIDTH // 2 - 200, self.HEIGHT - 600))
+        self.screen.blit(self.font.render(f"{battle.character1.name} HP: {battle.character1.health}", True, self.colors["white"]), (50, 30))
+        self.screen.blit(self.font.render(f"{battle.character2.name} HP: {battle.character2.health}", True, self.colors["white"]), (self.WIDTH - 250, 30))
+        self.screen.blit(self.font.render(battle.action_message, True, self.colors["white"]), (self.WIDTH // 2 - 200, self.HEIGHT - 600))
 
         battle.character1.animate()
         battle.character2.animate()
@@ -385,7 +404,7 @@ class GameInstance:
             for i, ab in enumerate(battle.character1.abilities):
                 ab_btn = self.draw_button(ab, 250 + i * 200, self.HEIGHT - 200, 180, 60)
                 cost = atr.ability_effects[ab].__doc__ or ""
-                cost_txt = self.small_font.render(cost, True, self.colors["black"])
+                cost_txt = self.small_font.render(cost, True, self.colors["white"])
                 self.screen.blit(cost_txt, (ab_btn.x + ab_btn.width // 2 - cost_txt.get_width() // 2, ab_btn.y + 65))
                 self.buttons[f"ability_{i}"] = ab_btn
 
@@ -398,21 +417,33 @@ class GameInstance:
                 self.buttons[f"item_{i}"] = item_btn
 
         if battle.game_over:
-            screen.fill(WHITE)
+            pygame.mixer.music.stop()
+            self.screen.blit(self.background, (0, 0))
             victory_text = "Victory!" if battle.character1.health > 0 else "Defeat!"
             text_rect = large_font.render(victory_text, True, GREEN if battle.character1.health > 0 else RED).get_rect(
                 center=(WIDTH // 2, HEIGHT // 4))
             screen.blit(large_font.render(victory_text, True, GREEN if battle.character1.health > 0 else RED),
                         text_rect)
-            report_text = font.render("Combat Report:", True, BLACK)
+            report_text = font.render("Combat Report:", True, WHITE)
             screen.blit(report_text, (50, HEIGHT // 2 - 50))
 
             lines = battle.battle_report.split("\n")
             for i, line in enumerate(lines):
-                screen.blit(small_font.render(line, True, BLACK), (50, HEIGHT // 2 + 10 + i * 30))
+                screen.blit(small_font.render(line, True, WHITE), (50, HEIGHT // 2 + 10 + i * 30))
 
             self.buttons["stage"] = self.draw_button("Back", WIDTH // 2 - 200, HEIGHT - 150, 180, 60)
             self.buttons["quit"] = self.draw_button("Quit", WIDTH // 2 + 20, HEIGHT - 150, 180, 60)
+
+    def load_sounds(self):
+        sounds = {}
+        sounds["select"] = load_sound("sfx/menu/select.wav")
+        sounds["back"] = load_sound("sfx/menu/back.wav")
+        return sounds
+
+    def play_sound(self, action):
+        sound = self.sounds.get(action)
+        if sound:
+            sound.play()
 
     def handle_input(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -428,8 +459,10 @@ class GameInstance:
                     elif key == "defend":
                         battle.process_action("defend")
                     elif key == "item":
+                        self.play_sound("select")
                         battle.process_action("item")
                     elif key == "ability":
+                        self.play_sound("select")
                         battle.process_action("ability")
                     elif key.startswith("ability_"):
                         idx = int(key.split("_")[1])
@@ -438,8 +471,10 @@ class GameInstance:
                         idx = int(key.split("_")[1])
                         battle.process_action("item", item_choice=battle.character1.items[idx])
                     elif key == "quit":
+                        self.play_sound("back")
                         self.running = False
                     elif key == "stage":
+                        self.play_sound("back")
                         self.running = False
                         pygame.quit()
 
@@ -462,14 +497,14 @@ if __name__ == "__main__":
     level = int(sys.argv[1]) if len(sys.argv) > 1 else 1
 
     if level == 1:
-        enemy_attributes = atr.goblin_attributes
+        enemy_attributes = atr.visor_attributes
     elif level == 2:
-        enemy_attributes = atr.skeleton_attributes
+        enemy_attributes = atr.dunky_attributes
     else:
-        print(f"Warning: Level {level} not defined, defaulting to Goblin.")
-        enemy_attributes = atr.goblin_attributes
+        print(f"Warning: Level {level} not defined, defaulting to Visor.")
+        enemy_attributes = atr.visor_attributes
 
-    game = GameInstance(atr.hero_attributes, enemy_attributes)
+    game = GameInstance(atr.meepo_attributes, enemy_attributes)
     game.run()
     print(level)
 

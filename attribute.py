@@ -1,36 +1,36 @@
-hero_attributes = {
-    "name": "Hero",
+meepo_attributes = {
+    "name": "Meepo",
     "health": 100,
     "mana": 50,
     "strength": 15,
     "defense": 5,
     "abilities": ["Fireball", "Heal", "Bash", "Shield"],
     "items": ["Potion", "Elixir"],
-    "sfx": "sfx/hero",
-    "sprite": "sprites/hero"
+    "sfx": "sfx/meepo",
+    "sprite": "sprites/meepo"
 }
 
-goblin_attributes = {
-    "name": "Goblin",
+visor_attributes = {
+    "name": "Visor",
     "health": 60,
     "mana": 50,
     "strength": 10,
     "defense": 5,
-    "abilities": ["Swipe", "Kick", "Fireball"],
+    "abilities": ["Fireball", "Smoke"],
     "items": ["Potion"],
-    "sfx": "sfx/hero",
-    "sprite": "sprites/goblin"
+    "sfx": "sfx/meepo",
+    "sprite": "sprites/visor"
 }
-skeleton_attributes = {
-    "name": "Skeleton",
+dunky_attributes = {
+    "name": "Dunky",
     "health": 60,
     "mana": 50,
     "strength": 10,
     "defense": 5,
     "abilities": ["Swipe", "Kick"],
     "items": ["Potion"],
-    "sfx": "sfx/hero",
-    "sprite": "sprites/skeleton"
+    "sfx": "sfx/meepo",
+    "sprite": "sprites/dunky"
 }
 def fireball(char1, char2):
     """Deal 25+str magic damage, costs 10 mana"""
@@ -41,10 +41,9 @@ def fireball(char1, char2):
         else:
             damage = dmg_for
 
-        # Apply damage and check for parry
         p = char2.take_damage(damage)
         char1.mana -= 10
-
+        char1.play_sound("fireball")
         if p == 1:
             char2.play_sound("parry")
             char2.start_animation("parry")
@@ -52,9 +51,31 @@ def fireball(char1, char2):
             return "Parried"
         else:
             char1.total_damage_dealt += damage
-            char1.play_sound("fireball")
+
             return f"{char1.name} casts Fireball for {damage} damage!"
     return "Not enough mana for Fireball!"
+
+def smoke(char1, char2):
+    """Deal 10+str damage"""
+    dmg_for = 10 + char1.strength
+    if char1.mana >= 10:
+        if char2.defend_stance == 1:
+            damage = dmg_for // 2
+        else:
+            damage = dmg_for
+
+        p = char2.take_damage(damage)
+        char1.mana -= 10
+        char1.play_sound("smoke")
+        if p == 1:
+            char2.play_sound("parry")
+            char2.start_animation("parry")
+            char2.total_m_dam += damage
+            return "Parried"
+        else:
+            char1.total_damage_dealt += damage
+            return f"{char1.name} casts Smoke for {damage} damage!"
+    return "Not enough mana for Smoke!"
 
 def heal(char1, char2):
     """Heals 30 HP"""
@@ -90,12 +111,21 @@ def swipe(char1, char2):
     """Basic attack: 10 + str damage"""
     dmg_for = 10 + char2.strength
     if char2.defend_stance == 1:
-        damage = dmg_for//2
+        damage = dmg_for // 2
     else:
         damage = dmg_for
-    char2.health -= damage
-    char1.total_damage_dealt += damage
-    return f"{char1.name} swipes for {damage} damage!"
+
+    p = char2.take_damage(damage)
+    char1.play_sound("swipe")
+    char2.start_animation("attack")
+    if p == 1:
+        char2.play_sound("parry")
+        char2.start_animation("parry")
+        char2.total_m_dam += damage
+        return "Parried"
+    else:
+        char1.total_damage_dealt += damage
+        return f"{char1.name} casts Swipe for {damage} damage!"
 
 def kick(char1, char2):
     """Stronger attack: 15 + str damage"""
@@ -104,10 +134,18 @@ def kick(char1, char2):
         damage = dmg_for // 2
     else:
         damage = dmg_for
-    char2.health -= damage
-    char1.total_damage_dealt += damage
-    return f"{char1.name} kicks for {damage} damage!"
 
+    p = char2.take_damage(damage)
+    char1.play_sound("swipe")
+    char2.start_animation("attack")
+    if p == 1:
+        char2.play_sound("parry")
+        char2.start_animation("parry")
+        char2.total_m_dam += damage
+        return "Parried"
+    else:
+        char1.total_damage_dealt += damage
+        return f"{char1.name} kicks for {damage} damage!"
 def potion(char1, char2):
     """Heals 20 HP"""
     heal_amount = 20
@@ -131,7 +169,8 @@ ability_effects = {
     "Bash": bash,
     "Shield": shield,
     "Swipe": swipe,
-    "Kick": kick
+    "Kick": kick,
+    "Smoke": smoke
 }
 
 item_effects = {

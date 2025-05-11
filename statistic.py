@@ -23,6 +23,7 @@ class StatisticWindow(tk.Tk):
         self.char_colors = {}
         self.init_ui()
 
+
     def init_ui(self):
         csv_file = "combat_log.csv"
         if not os.path.exists(csv_file):
@@ -179,11 +180,11 @@ class StatisticWindow(tk.Tk):
         enemy_data = self.df[self.df["Name"] == selected_char]
         enemy_names = []
         for name in enemy_data["Name"]:
-            if name == "Hero":
-                enemy_names.append("Goblin")
-                enemy_names.append("Skeleton")
-            elif name != "Hero":
-                enemy_names.append("Hero")
+            if name == "Meepo":
+                enemy_names.append("Visor")
+                enemy_names.append("Dunky")
+            elif name != "Meepo":
+                enemy_names.append("Meepo")
         enemy_counts = pd.Series(enemy_names).value_counts()
         labels = enemy_counts.index.tolist()
         counts = enemy_counts.tolist()
