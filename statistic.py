@@ -1,11 +1,13 @@
-import tkinter as tk
 from tkinter import ttk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import pandas as pd
-import os
 import ast
 import random
+import tkinter as tk
+import os
+
+import pygame
 
 class StatisticWindow(tk.Tk):
     def __init__(self, previous_window=None):
@@ -23,12 +25,10 @@ class StatisticWindow(tk.Tk):
         self.char_colors = {}
         self.init_ui()
 
-
     def init_ui(self):
         csv_file = "combat_log.csv"
         if not os.path.exists(csv_file):
-            tk.messagebox.showerror("Error",
-                                   f"Could not find {csv_file}.  Please play some games to generate data.")
+            tk.messagebox.showerror("Error", f"Could not find {csv_file}. Please play some games to generate data.")
             self.destroy()
             return
 
@@ -39,8 +39,7 @@ class StatisticWindow(tk.Tk):
             self.destroy()
             return
 
-        self.stat_options = ["Damage Dealt", "Healing Done",
-                            "Damage Mitigated"]
+        self.stat_options = ["Damage Dealt", "Healing Done", "Damage Mitigated"]
         self.selected_stat = tk.StringVar(self)
         self.selected_stat.set(self.stat_options[0])
 
@@ -51,7 +50,7 @@ class StatisticWindow(tk.Tk):
         for char in self.char_options:
             self.char_colors[char] = "#{:06x}".format(random.randint(0, 0xFFFFFF))
 
-        self.graph_types = ["Statistic", "Moveset", "Enemy"]
+        self.graph_types = ["Statistic", "Moveset", "Enemy", "Table"]
         self.selected_graph_type.set(self.graph_types[0])
 
         dropdown_frame = ttk.Frame(self)
@@ -62,21 +61,19 @@ class StatisticWindow(tk.Tk):
         char_dropdown = ttk.Combobox(dropdown_frame, textvariable=self.selected_char,
                                      values=self.char_options, state="readonly")
         char_dropdown.pack(side=tk.LEFT, padx=10)
-        char_dropdown.bind("<<ComboboxSelected>>",
-                             self.update_graph)
+        char_dropdown.bind("<<ComboboxSelected>>", self.update_graph)
 
         stat_label = ttk.Label(dropdown_frame, text="Select Statistic:")
         stat_label.pack(side=tk.LEFT, padx=10)
         stat_dropdown = ttk.Combobox(dropdown_frame, textvariable=self.selected_stat,
                                      values=self.stat_options, state="readonly")
         stat_dropdown.pack(side=tk.LEFT, padx=10)
-        stat_dropdown.bind("<<ComboboxSelected>>",
-                             self.update_graph)
+        stat_dropdown.bind("<<ComboboxSelected>>", self.update_graph)
 
         graph_type_label = ttk.Label(dropdown_frame, text="Select Graph Type:")
         graph_type_label.pack(side=tk.LEFT, padx=10)
         graph_type_dropdown = ttk.Combobox(dropdown_frame, textvariable=self.selected_graph_type,
-                                          values=self.graph_types, state="readonly")
+                                           values=self.graph_types, state="readonly")
         graph_type_dropdown.pack(side=tk.LEFT, padx=10)
         graph_type_dropdown.bind("<<ComboboxSelected>>", self.update_graph)
 
@@ -90,6 +87,10 @@ class StatisticWindow(tk.Tk):
         self.enemy_graph_frame = ttk.Frame(self)
         self.enemy_graph_frame.pack(fill=tk.BOTH, expand=True)
         self.enemy_graph_frame.pack_forget()
+
+        self.table_frame = ttk.Frame(self)
+        self.table_frame.pack(fill=tk.BOTH, expand=True)
+        self.table_frame.pack_forget()
 
         self.back_button = ttk.Button(self, text="Back to Main Menu", command=self.back_to_main_menu)
         self.back_button.pack(anchor=tk.NE, padx=10, pady=10)
@@ -106,6 +107,7 @@ class StatisticWindow(tk.Tk):
         self.graph_frame.pack_forget()
         self.moveset_graph_frame.pack_forget()
         self.enemy_graph_frame.pack_forget()
+        self.table_frame.pack_forget()
 
         if selected_graph_type == "Statistic":
             self.show_statistic_graph(selected_char, selected_stat)
@@ -116,6 +118,9 @@ class StatisticWindow(tk.Tk):
         elif selected_graph_type == "Enemy":
             self.update_enemy_pie_chart(selected_char)
             self.enemy_graph_frame.pack(fill=tk.BOTH, expand=True)
+        elif selected_graph_type == "Table":
+            self.update_table_view(selected_char)
+            self.table_frame.pack(fill=tk.BOTH, expand=True)
 
     def show_statistic_graph(self, selected_char, selected_stat):
         char_data = self.df[self.df["Name"] == selected_char]
@@ -163,8 +168,7 @@ class StatisticWindow(tk.Tk):
         plt.grid(axis='y')
         plt.legend()
 
-        canvas_moveset = FigureCanvasTkAgg(plt.gcf(),
-                                           master=self.moveset_graph_frame)
+        canvas_moveset = FigureCanvasTkAgg(plt.gcf(), master=self.moveset_graph_frame)
         canvas_moveset.draw()
         canvas_moveset_widget = canvas_moveset.get_tk_widget()
 
@@ -204,6 +208,68 @@ class StatisticWindow(tk.Tk):
         self.canvas_enemy_widget = canvas_enemy_widget
         self.canvas_enemy_widget.pack(fill=tk.BOTH, expand=True)
         self.canvas_enemy_widget.configure(background="white")
+
+    def update_table_view(self, selected_char):
+        for widget in self.table_frame.winfo_children():
+            widget.destroy()
+
+        moveset_data = self.df[self.df["Name"] == selected_char]
+        all_moves = []
+        for moveset_str in moveset_data["Movesets"]:
+            try:
+                moveset = ast.literal_eval(moveset_str)
+                all_moves.extend(moveset)
+            except (ValueError, SyntaxError) as e:
+                print(f"Error parsing moveset string: {moveset_str}. Skipping. Error: {e}")
+                continue
+
+        move_counts = pd.Series(all_moves).value_counts().reset_index()
+        move_counts.columns = ["Move", "Frequency"]
+
+        style = ttk.Style()
+        style.theme_use("default")
+        style.configure("Treeview",
+                        background="#f0f0f0",
+                        foreground="black",
+                        rowheight=28,
+                        fieldbackground="#f0f0f0",
+                        font=('Segoe UI', 12))
+        style.configure("Treeview.Heading",
+                        background="#005f99",
+                        foreground="white",
+                        font=('Segoe UI', 12, 'bold'))
+        style.map("Treeview", background=[('selected', '#3399ff')])
+
+        table = ttk.Treeview(self.table_frame, columns=("Move", "Frequency"), show="headings", selectmode="browse")
+        table.heading("Move", text="Move", anchor="center")
+        table.heading("Frequency", text="Frequency", anchor="center")
+        table.column("Move", anchor="center", width=200)
+        table.column("Frequency", anchor="center", width=150)
+
+        # Tag styles
+        table.tag_configure('evenrow', background="#e6f2ff")
+        table.tag_configure('oddrow', background="#ffffff")
+        table.tag_configure('highlight', background="#ffdf80", font=('Segoe UI', 12, 'bold'))
+
+        # Insert rows
+        for index, row in move_counts.iterrows():
+            tag = 'evenrow' if index % 2 == 0 else 'oddrow'
+            table.insert("", "end", values=(row["Move"], row["Frequency"]), tags=(tag,))
+
+        # Blank row to create spacing before highlight
+        table.insert("", "end", values=("", ""))
+
+        # Append the top move again at the bottom with highlight
+        top_move = move_counts.iloc[0]
+        table.insert("", "end",
+                     values=(f"Most Used: {top_move['Move']}", top_move["Frequency"]),
+                     tags=("highlight",))
+
+        scrollbar = ttk.Scrollbar(self.table_frame, orient="vertical", command=table.yview)
+        table.configure(yscrollcommand=scrollbar.set)
+
+        table.pack(side="left", fill="both", expand=True, padx=20, pady=10)
+        scrollbar.pack(side="right", fill="y", pady=10)
 
     def back_to_main_menu(self):
         self.destroy()

@@ -80,3 +80,24 @@ Dunky,25,0,0,"['Swipe', 'defend', 'defend']"
 Meepo,90,0,30,"['Bash', 'Shield', 'Shield', 'Shield', 'Fireball', 'Fireball']"
 Dunky,25,20,0,"['defend', 'Swipe', 'defend', 'Kick', 'item']"
 
+Meepo,180,0,17,"['Fireball', 'Fireball', 'Fireball', 'defend', 'defend', 'defend', 'Fireball', 'Fireball']"
+Visor,67,20,7,"['Smoke', 'Smoke', 'defend', 'Fireball', 'item', 'Fireball', 'parry', 'defend', 'Smoke']"
+
+Meepo,195,0,0,"['Fireball', 'Fireball', 'Fireball', 'attack', 'Fireball', 'Fireball', 'Fireball', 'attack', 'attack']"
+Visor,73,20,0,"['Fireball', 'defend', 'item', 'attack', 'defend', 'attack', 'defend', 'Smoke']"
+
+Meepo,195,0,0,"['Fireball', 'Fireball', 'Fireball', 'Fireball', 'attack', 'attack', 'attack']"
+Visor,27,40,0,"['attack', 'attack', 'item', 'defend', 'item', 'attack']"
+
+Meepo,183,0,0,"['Fireball', 'Fireball', 'defend', 'Bash', 'Shield', 'Fireball', 'attack', 'attack', 'Fireball']"
+Visor,95,0,14,"['attack', 'defend', 'attack', 'defend', 'defend', 'Smoke', 'Fireball', 'Smoke', 'parry', 'attack']"
+
+Meepo,240,50,30,"['Fireball', 'Fireball', 'Fireball', 'Fireball', 'Fireball', 'item', 'item', 'Fireball', 'Heal', 'Fireball', 'Fireball', 'Fireball', 'item', 'Fireball', 'item', 'Fireball']"
+Dunky,156,100,120,"['attack', 'item', 'attack', 'Kick', 'attack', 'defend', 'item', 'defend', 'item', 'Kick', 'Kick', 'item', 'Kick', 'attack', 'item', 'Kick']"
+
+Meepo,220,20,0,"['Fireball', 'Fireball', 'Fireball', 'Fireball', 'item', 'item', 'Fireball', 'Fireball']"
+Visor,69,40,0,"['item', 'Smoke', 'Smoke', 'item', 'defend', 'attack', 'Smoke']"
+
+Meepo,228,0,0,"['Fireball', 'Fireball', 'Fireball', 'attack', 'attack', 'attack', 'Fireball', 'Fireball']"
+Visor,18,60,7,"['item', 'item', 'defend', 'defend', 'parry', 'defend', 'item', 'attack', 'attack']"
+

@@ -12,7 +12,7 @@ meepo_attributes = {
 
 visor_attributes = {
     "name": "Visor",
-    "health": 60,
+    "health": 150,
     "mana": 50,
     "strength": 10,
     "defense": 5,
@@ -23,7 +23,7 @@ visor_attributes = {
 }
 dunky_attributes = {
     "name": "Dunky",
-    "health": 60,
+    "health": 200,
     "mana": 50,
     "strength": 10,
     "defense": 5,
