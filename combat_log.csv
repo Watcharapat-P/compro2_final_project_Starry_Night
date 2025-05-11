@@ -101,3 +101,9 @@ Visor,69,40,0,"['item', 'Smoke', 'Smoke', 'item', 'defend', 'attack', 'Smoke']"
 Meepo,228,0,0,"['Fireball', 'Fireball', 'Fireball', 'attack', 'attack', 'attack', 'Fireball', 'Fireball']"
 Visor,18,60,7,"['item', 'item', 'defend', 'defend', 'parry', 'defend', 'item', 'attack', 'attack']"
 
+Meepo,174,9,0,"['Fireball', 'Heal', 'Fireball', 'Fireball', 'attack', 'Fireball']"
+Visor,82,20,14,"['attack', 'Smoke', 'item', 'attack', 'Fireball', 'parry', 'attack']"
+
+Meepo,282,0,9,"['Fireball', 'Fireball', 'Fireball', 'Fireball', 'Fireball', 'Fireball', 'item', 'Fireball', 'attack', 'parry', 'attack', 'attack']"
+Visor,64,120,0,"['Smoke', 'item', 'item', 'item', 'item', 'item', 'item', 'attack', 'Fireball']"
+

@@ -58,4 +58,4 @@
 - proposal.pdf - Original project proposal *(I decided to deviate from the proposal a bit)*
 
 ## YouTube Video
-5-minute presentation: https://youtu.be/YOUR_VIDEO_LINK
+5-minute presentation: https://www.youtube.com/watch?v=_OBY_Wz1WwI

@@ -246,20 +246,16 @@ class StatisticWindow(tk.Tk):
         table.column("Move", anchor="center", width=200)
         table.column("Frequency", anchor="center", width=150)
 
-        # Tag styles
         table.tag_configure('evenrow', background="#e6f2ff")
         table.tag_configure('oddrow', background="#ffffff")
         table.tag_configure('highlight', background="#ffdf80", font=('Segoe UI', 12, 'bold'))
 
-        # Insert rows
         for index, row in move_counts.iterrows():
             tag = 'evenrow' if index % 2 == 0 else 'oddrow'
             table.insert("", "end", values=(row["Move"], row["Frequency"]), tags=(tag,))
 
-        # Blank row to create spacing before highlight
         table.insert("", "end", values=("", ""))
 
-        # Append the top move again at the bottom with highlight
         top_move = move_counts.iloc[0]
         table.insert("", "end",
                      values=(f"Most Used: {top_move['Move']}", top_move["Frequency"]),

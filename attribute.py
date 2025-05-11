@@ -32,6 +32,7 @@ dunky_attributes = {
     "sfx": "sfx/meepo",
     "sprite": "sprites/dunky"
 }
+
 def fireball(char1, char2):
     """Deal 25+str magic damage, costs 10 mana"""
     dmg_for = 25 + char1.strength
